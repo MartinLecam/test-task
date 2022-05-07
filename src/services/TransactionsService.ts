@@ -1,11 +1,12 @@
 import { BaseService } from "./infrastructure/BaseService";
+import { Guid } from "guid-typescript";
 
 /**
  * The transaction object
  * Value is of type `number` for simplification
  */
 export interface Transaction {
-    id: number
+    id: Guid
     to: string
     from: string
     value: number 
@@ -30,12 +31,15 @@ export class TransactionsService extends BaseService<TransactionsServiceState> {
      * It adds a transaction to the list
      * TODO: Complete addTransaction code inside the Promise resolve function
      */
-    public async addTransaction(newTransaction: Transaction): Promise<void> {
-        return new Promise<void>((resolve) => {
+    public async addTransaction(newTransaction: Transaction): Promise<Transaction> {
+        return new Promise<Transaction>((resolve) => {
             setTimeout(() => {
-                resolve(
+                const { transactions } = this.getState();
+                this.updateState({
+                    transactions: [newTransaction, ...transactions],
+                });
 
-                )
+                resolve(newTransaction);
             }, 300);
         })
     }
@@ -47,9 +51,8 @@ export class TransactionsService extends BaseService<TransactionsServiceState> {
     public async getListOfTransactions(): Promise<Array<Transaction>>  {
         return new Promise<Array<Transaction>>((resolve) => {
             setTimeout(() => {
-                resolve(
-
-                )
+                const { transactions } = this.getState();
+                resolve(transactions);
             }, 300);
         })
     }
